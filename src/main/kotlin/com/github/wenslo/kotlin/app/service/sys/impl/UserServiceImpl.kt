@@ -1,7 +1,7 @@
 package com.github.wenslo.kotlin.app.service.sys.impl
 
 import com.github.wenslo.kotlin.app.entity.sys.User
-import com.github.wenslo.kotlin.app.repository.UserReposiory
+import com.github.wenslo.kotlin.app.repository.sys.UserRepository
 import com.github.wenslo.kotlin.app.service.sys.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 class UserServiceImpl : UserService {
 
     @Autowired
-    lateinit var userRepository: UserReposiory
+    lateinit var userRepository: UserRepository
 
     override fun findPage(pageNumber: Int, pageSize: Int): Page<User> {
         val request = this.buildPageRequest(pageNumber, pageSize)
