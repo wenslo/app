@@ -1,0 +1,89 @@
+buildscript {
+    ext {
+        kotlinVersion = '1.1.60'
+        springBootVersion = '1.5.8.RELEASE'
+        shiroVersion = '1.4.0'
+        wro4jVersion = '1.8.0'
+        sitemeshVersion = '3.0.1'
+        modelMapperVersion = '0.7.8'
+    }
+    repositories {
+        maven { url "http://nexus.ggxueche.cn/nexus/content/groups/public/" }
+        maven { url "http://maven.aliyun.com/nexus/content/groups/public" }
+        mavenCentral()
+        mavenLocal()
+        jcenter()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
+        classpath("org.springframework:springloaded:1.2.6.RELEASE")
+    }
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'kotlin-spring'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'war'
+
+group = 'com.github.wenslo.kotlin'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+repositories {
+    maven { url "http://nexus.ggxueche.cn/nexus/content/groups/public/" }
+    maven { url "http://maven.aliyun.com/nexus/content/groups/public" }
+    mavenCentral()
+    mavenLocal()
+    jcenter()
+}
+
+configurations {
+    providedRuntime
+}
+//编译输出目录
+idea {
+    module {
+        inheritOutputDirs = false
+        outputDir = file("$buildDir/classes/kotlin/main/")
+    }
+}
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile("org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}")
+    compile("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
+    runtime('mysql:mysql-connector-java')
+    providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
+    //jpa 依赖
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    //shiro
+    compile("org.apache.shiro:shiro-spring:${shiroVersion}")
+    compile("org.apache.shiro:shiro-ehcache:${shiroVersion}")
+    compile("org.apache.shiro:shiro-web:${shiroVersion}")
+    //google guava
+    compile("com.google.guava:guava:19.0")
+    //google json处理
+    compile("com.google.code.gson:gson:2.4")
+    //model mapper
+    compile("org.modelmapper:modelmapper:${modelMapperVersion}")
+    //thymeleaf配置
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '1.5.8.RELEASE'
+    //方言，日志去除
+    compile("org.thymeleaf:thymeleaf-spring4:3.0.2.RELEASE")
+    compile("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:2.1.1")
+    //取消标签检查
+    compile("net.sourceforge.nekohtml:nekohtml:1.9.22")
+    //热更新
+    compile("org.springframework.boot:spring-boot-devtools")
+
+}
