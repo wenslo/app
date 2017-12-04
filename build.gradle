@@ -61,6 +61,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
     compile("org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}")
     compile("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
+    compile('mysql:mysql-connector-java')
     runtime('mysql:mysql-connector-java')
     providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
     //jpa 依赖
@@ -78,9 +79,6 @@ dependencies {
     compile("org.modelmapper:modelmapper:${modelMapperVersion}")
     //thymeleaf配置
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '1.5.8.RELEASE'
-    //方言，日志去除
-    compile("org.thymeleaf:thymeleaf-spring4:3.0.2.RELEASE")
-    compile("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:2.1.1")
     //取消标签检查
     compile("net.sourceforge.nekohtml:nekohtml:1.9.22")
     //热更新
