@@ -40,8 +40,7 @@
                 <div class="box col-md-12">
                     <div class="box-inner">
                         <div class="box-header well" data-original-title="">
-                            <h2>Bordered Table</h2>
-
+                            <h2 th:text="${title}"></h2>
                             <div class="box-icon">
                                 <a href="#" class="btn btn-setting btn-round btn-default"><i
                                         class="glyphicon glyphicon-cog"></i></a>
@@ -53,42 +52,39 @@
 
                         </div>
                         <div class="box-content">
-                            <table class="table table-bordered">
-                                <thead>
-                                <tr>
-                                    <th>Username</th>
-                                    <th>Phone</th>
-                                    <th>Password</th>
-                                    <th>Date registered</th>
-                                    <th>Role</th>
-                                    <th>Status</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="user : ${users}">
-                                    <td th:text="${user.username}"></td>
-                                    <td class="center" th:text="${user.phone}"></td>
-                                    <td class="center">******</td>
-                                    <td class="center" th:text="${user.createdAt}"></td>
-                                    <td class="center" th:each="role : ${user.roleList}" th:text="${role.title}"></td>
-                                    <td class="center">
+                            <form method="post" class="form-inline">
+
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>Username</th>
+                                        <th>Phone</th>
+                                        <th>Password</th>
+                                        <th>Date registered</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="user : ${page.content}">
+                                        <td th:text="${user.username}"></td>
+                                        <td class="center" th:text="${user.phone}"></td>
+                                        <td class="center">******</td>
+                                        <td class="center" th:text="${user.createdAt}"></td>
+                                        <td class="center" th:if="${#lists.isEmpty(user.roleList)}">none</td>
+                                        <td class="center" th:if="${not #lists.isEmpty(user.roleList)}"
+                                            th:each="role : ${user.roleList}" th:text="${role.title}"></td>
+                                        <td class="center">
                                         <span class="label-success label label-default"
                                               th:text="${user.status}">Active</span>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <div th:if="${page} != null" th:include="/common/pading :: pading"></div>
-                            <ul class="pagination pagination-right">
-                                <li><a href="#">Prev</a></li>
-                                <li class="active">
-                                    <a href="#">1</a>
-                                </li>
-                                <li><a href="#">2</a></li>
-                                <li><a href="#">3</a></li>
-                                <li><a href="#">4</a></li>
-                                <li><a href="#">Next</a></li>
-                            </ul>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="pull-right" th:if="${page} != null"
+                                     th:include="/common/pading :: pading"></div>
+
+                            </form>
                         </div>
                     </div>
                 </div>

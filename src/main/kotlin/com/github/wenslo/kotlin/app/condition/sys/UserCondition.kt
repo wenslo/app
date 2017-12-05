@@ -7,5 +7,5 @@ import java.io.Serializable
  * 2017年12月04日17:26:44
  */
 data class UserCondition(
-        var name: String
+        var name: String = ""
 ) : Serializable
