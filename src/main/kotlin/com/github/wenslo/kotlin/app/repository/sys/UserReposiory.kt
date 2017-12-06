@@ -22,7 +22,7 @@ interface UserRepository : JpaRepository<User, Long>, JpaSpecificationExecutor<U
 class UserSpecification(private val c: UserCondition) : Specification<User> {
     override fun toPredicate(root: Root<User>, query: CriteriaQuery<*>, cb: CriteriaBuilder): Predicate {
         val p = mutableListOf<Predicate>()
-        c.name.isNotBlank().then { p.add(cb.startWith(root.get<String>(UserCondition::name.name), c.name)) }
+        c.username.isNotBlank().then { p.add(cb.startWith(root.get<String>(UserCondition::username.name), c.username)) }
         return cb.and(*p.toTypedArray())
     }
 }

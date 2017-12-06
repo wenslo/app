@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="dataTables_length" th:fragment="page_number">
+    <label>
+        <select id="page_number"
+                size="1" name="size"
+                aria-controls="DataTables_Table_0"
+                onchange="change_page_number(this.value)">
+
+            <option th:each="value : ${#numbers.sequence( 1, 100)}"
+                    th:if="${value % 10 ==0}"
+                    th:value="${value}" th:text="${value}"
+                    value="${value}"
+                    th:selected="${page.size} == ${value}"></option>
+        </select>
+        records per page
+    </label>
+    <script>
+        function change_page_number(size) {
+            var form = $(".data-form");
+//            form.append("<input type='hidden'  name='size' value='" + size + "'>");
+            form.submit()
+        }
+    </script>
+</div>
+
+</body>
+</html>
