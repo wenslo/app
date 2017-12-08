@@ -31,8 +31,8 @@ class MainController {
               @RequestParam(defaultValue = "false", required = false) rememberMe: Boolean,
               map: ModelMap
     ): String {
-        var subject = ShiroUtils.getSubject()
-        var token = UsernamePasswordToken(username, password, rememberMe)
+        val subject = ShiroUtils.getSubject()
+        val token = UsernamePasswordToken(username, password, rememberMe)
         try {
             subject.login(token)
         } catch (ex: AuthenticationException) {
@@ -49,16 +49,12 @@ class MainController {
     @ResponseBody
     @RequestMapping(value = "logout")
     fun logout(): Response<Void> {
-        var subject = ShiroUtils.getSubject()
+        val subject = ShiroUtils.getSubject()
         subject.logout()
         return Response.SUCCESS
     }
 
-    @RequestMapping(value = "/main")
-    fun index(map: ModelMap): String {
-        // 加入一个属性，用来在模板中读取
-        map.addAttribute("host", "http://blog.didispace.com")
-        return "login"
-    }
+    @RequestMapping(value = "/index")
+    fun index(map: ModelMap) = "login"
 
 }

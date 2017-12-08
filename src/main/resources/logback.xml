@@ -10,9 +10,11 @@
     <!-- 3rdparty Loggers -->
     <logger name="org.springframework" level="WARN"/>
 
-    <logger name="org.hibernate" level="WARN"/>
+    <logger name="org.hibernate" level="ERROR"/>
 
-    <logger name="org.hibernate.SQL" level="DEBUG"/>
+    <logger name="org.hibernate.SQL" level="ERROR"/>
+
+    <logger name="org.thymeleaf" level="ERROR"/>
 
     <root level="debug">
         <appender-ref ref="STDOUT"/>

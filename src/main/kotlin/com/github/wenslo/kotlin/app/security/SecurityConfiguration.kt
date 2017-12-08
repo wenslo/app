@@ -1,7 +1,6 @@
-package com.github.wenslo.kotlin.app
+package com.github.wenslo.kotlin.app.security
 
 import com.github.wenslo.kotlin.app.filter.FormAuthenticationFilterExt
-import com.github.wenslo.kotlin.app.security.ShiroRealm
 import com.google.common.collect.Maps
 import org.apache.shiro.cache.CacheManager
 import org.apache.shiro.cache.ehcache.EhCacheManager

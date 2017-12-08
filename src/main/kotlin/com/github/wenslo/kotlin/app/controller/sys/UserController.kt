@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Controller
 import org.springframework.ui.ModelMap
-import org.springframework.web.bind.annotation.ModelAttribute
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.*
 
 @Controller
 @RequestMapping("/user")
@@ -27,8 +24,8 @@ class UserController {
 
     @ModelAttribute
     fun modelAttribute(map: ModelMap): ModelMap {
-        logger.debug("method:modelAttribute")
         map.put("title", "user manage")
+        map.put("update", "user manage")
         return map
     }
 
@@ -44,9 +41,29 @@ class UserController {
 
 
     @RequestMapping("save", method = arrayOf(RequestMethod.POST))
-    fun save(user: User) = repository.save(user).let { "redirect:/user/list"; }
+    fun save(user: User) {
+        logger.debug("method:save,parameter:{}", user)
+        repository.save(user).let { "redirect:/user/list"; }
+    }
 
     @RequestMapping("delete/{id}", method = arrayOf(RequestMethod.POST, RequestMethod.GET))
-    fun delete(@PathVariable id: Long) = repository.delete(id).let { "redirect:/user/list"; }
+    fun delete(@PathVariable id: Long) {
+        logger.debug("method:delete,id:{}", id)
+        repository.delete(id).let { "redirect:/user/list"; }
+    }
 
+    @GetMapping("detail/{id}")
+    @ResponseBody
+    fun detail(@PathVariable id: Long): User =
+            logger.debug("method:detail,id:{}", id).let { repository.getOne(id) }
+
+    @RequestMapping("update", method = arrayOf(RequestMethod.POST, RequestMethod.GET))
+    fun update(@RequestParam("id") id: Long, user: User, map: ModelMap): String {
+        logger.debug("method:update,parameter :{}", user.toString())
+        val oldUser = repository.getOne(id)
+        val copy = oldUser.copy(username = user.username, phone = user.phone, password = user.password, status = user.status).let { repository.save(it) }
+        logger.debug("to change user is {}", copy)
+        map.put("message", "Update Success")
+        return "redirect:/user/list"
+    }
 }

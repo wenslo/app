@@ -22,7 +22,7 @@ import java.util.*
  */
 open class ShiroRealm : AuthorizingRealm() {
 
-    private val logger: Logger = LoggerFactory.getLogger(this::getName.javaClass.name)
+    private val logger: Logger = LoggerFactory.getLogger(this::javaClass.name)
 
     @Autowired private lateinit var userService: UserService
 

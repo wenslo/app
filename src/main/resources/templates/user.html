@@ -3,8 +3,93 @@
       xmlns:th="http://www.thymeleaf.org">
 <head th:include="/common/head :: head"></head>
 <script>
+    $(document).ready(function () {
+        /*<![CDATA[*/
+        var message = /*[[${message}]]*/ '';
+
+        /*]]>*/
+        if (message !== "") {
+            var json =
+                {
+                    "text": '\"' + message + '\"',
+                    "layout": "center",
+                    "type": "alert",
+                    "animateOpen": {"opacity": "show"}
+                };
+            noty(json);
+        }
+    });
+
+    /**
+     * show user add
+     */
     function show_add_user_model() {
-        $('#add_user').modal('show');
+        $('#user_model .modal-footer').removeClass("hide");
+        $('#user_id').val("");
+        $('#user_model').modal('show');
+    }
+
+    /**
+     * show user detail view
+     */
+    function show_detail_user_model(id) {
+        $.ajax({
+            type: 'GET',
+            url: '/user/detail/' + id,
+            success: function (data) {
+                console.log(JSON.stringify(data));
+                var inputs = $('#user_model input');
+                for (var i = 0; i < inputs.length; i++) {
+                    $(inputs[i]).attr("readOnly", "readOnly")
+                }
+                var options = $('#user_model select option');
+                for (var i = 0; i < options.length; i++) {
+                    var obj = $(options[i]);
+                    if (obj.val() === data['status']) {
+                        obj.attr("selected", "selected");
+                    }
+                }
+                $('#user_model select').attr("disabled", "disabled");
+                for (var i = 0; i < inputs.length; i++) {
+                    $(inputs[i]).val(data[inputs[i].name])
+                }
+
+
+                $('#user_model h3').html("User View");
+                $('#user_model .modal-footer').addClass("hide");
+                $('#user_model').modal('show');
+            }
+        })
+    }
+
+    /**
+     * show user update view
+     */
+    function show_update_user_model(id) {
+        $.ajax({
+            type: 'GET',
+            url: '/user/detail/' + id,
+            success: function (data) {
+                console.log(JSON.stringify(data));
+                var inputs = $('#user_model input');
+                var options = $('#user_model select option');
+                for (var i = 0; i < options.length; i++) {
+                    var obj = $(options[i]);
+                    if (obj.val() === data['status']) {
+                        obj.attr("selected", "selected");
+                    }
+                }
+                for (var i = 0; i < inputs.length; i++) {
+                    $(inputs[i]).val(data[inputs[i].name])
+                }
+
+                $('#user_model form').attr("action", "/user/update");
+                $('#user_id').val(id);
+                $('#user_model h3').html("User Update");
+                $('#user_model .modal-footer').removeClass("hide");
+                $('#user_model').modal('show');
+            }
+        })
     }
 
 </script>
@@ -69,6 +154,7 @@
                                         </label>
                                     </div>
                                 </div>
+
                                 <table class="table table-striped  table-bordered ">
                                     <thead>
                                     <tr>
@@ -95,11 +181,13 @@
                                               th:text="${user.status}">Active</span>
                                         </td>
                                         <td class="center">
-                                            <a class="btn btn-success btn-xs" th:href="@{/user/detail}">
+                                            <a class="btn btn-success btn-xs" href="#"
+                                               th:onclick="'javascript:show_detail_user_model('+${user.id}+')'">
                                                 <i class="glyphicon glyphicon-zoom-in icon-white"></i>
                                                 View
                                             </a>
-                                            <a class="btn btn-info btn-xs" th:href="@{'/user/edit/'+${user.id}}">
+                                            <a class="btn btn-info btn-xs" href="#"
+                                               th:onclick="'javascript:show_update_user_model('+${user.id}+')'">
                                                 <i class="glyphicon glyphicon-edit icon-white"></i>
                                                 Edit
                                             </a>
@@ -131,8 +219,8 @@
     </div><!--/fluid-row-->
 
     <hr>
-
-    <div class="modal fade" id="add_user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    <!-- add update view model start -->
+    <div class="modal fade" id="user_model" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
 
         <div class="modal-dialog">
@@ -142,7 +230,9 @@
                     <h3>Add User</h3>
                 </div>
                 <div class="modal-body">
-                    <form id="add_user_form" role="form" th:action="@{/user/save}" method="post">
+                    <form id="user_form" role="form" th:action="@{/user/save}"
+                          method="post">
+                        <input type="hidden" name="id" id="user_id"/>
                         <div class="form-group">
                             <label for="add_user_username">Username</label>
                             <input class="form-control" id="add_user_username" name="username"
@@ -163,7 +253,7 @@
                             <select id="add_user_select_disable_status" name="status" class="form-control"
                                     data-live-search="true">
                                 <option value="DISABLE">DISABLE</option>
-                                <option value="ENABLE" selected>ENABLE</option>
+                                <option value="ENABLE">ENABLE</option>
                             </select>
                         </div>
                     </form>
@@ -171,12 +261,13 @@
                 <div class="modal-footer">
                     <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
                     <a href="#" class="btn btn-primary" data-dismiss="modal"
-                       onclick="$('#add_user_form').submit()">Save
+                       onclick="$('#user_form').submit()">Save
                         changes</a>
                 </div>
             </div>
         </div>
     </div>
+    <!-- add update view model end -->
 
     <footer class="row">
         <p class="col-md-9 col-sm-9 col-xs-12 copyright">&copy; <a href="http://usman.it" target="_blank">Muhammad

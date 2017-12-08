@@ -2,11 +2,18 @@ package com.github.wenslo.kotlin.app.entity.sys
 
 import com.github.wenslo.kotlin.app.entity.BaseEntity
 import com.github.wenslo.kotlin.app.entity.sys.enum.DisableStatus
+import org.springframework.data.annotation.CreatedDate
+import org.springframework.data.annotation.LastModifiedDate
+import java.util.*
 import javax.persistence.*
 
 @Entity
 @Table(name = "user")
 data class User(
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY) override val id: Long = 0,
+        @CreatedDate override val createdAt: Date = Date(),
+        @LastModifiedDate override val updatedAt: Date = Date(),
         @Column(name = "username")
         var username: String = "",
         //手机

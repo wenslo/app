@@ -13,9 +13,9 @@ import javax.persistence.MappedSuperclass
 open class BaseEntity(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        val id: Long = 0,
+        open val id: Long = 0,
         @CreatedDate
-        val createdAt: Date = Date(),
+        open val createdAt: Date = Date(),
         @LastModifiedDate
-        val updatedAt: Date = Date()
+        open val updatedAt: Date = Date()
 ) : Serializable
