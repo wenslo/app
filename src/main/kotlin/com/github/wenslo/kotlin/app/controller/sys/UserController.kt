@@ -1,5 +1,6 @@
 package com.github.wenslo.kotlin.app.controller.sys
 
+import com.github.wenslo.kotlin.app.annotation.OperationLog
 import com.github.wenslo.kotlin.app.condition.sys.UserCondition
 import com.github.wenslo.kotlin.app.entity.sys.User
 import com.github.wenslo.kotlin.app.repository.sys.UserRepository
@@ -29,6 +30,7 @@ class UserController {
         return map
     }
 
+    @OperationLog()
     @RequestMapping("list", method = arrayOf(RequestMethod.POST, RequestMethod.GET))
     fun list(condition: UserCondition, pageable: Pageable, map: ModelMap): String {
         logger.debug("method:list,condition:{},pageable:{}", condition, pageable)
