@@ -67,6 +67,7 @@ open class ShiroRealm : AuthorizingRealm() {
     private fun getUserPrincipal(user: User): Principal {
         val prin = Principal(user.id, user.username)
         prin.attributes = mapOf(Pair("name", user.username))
+        prin.attributes = mapOf(Pair("user", user))
         return prin
     }
 

@@ -1,8 +1,11 @@
 package com.github.wenslo.kotlin.app.aspect
 
+import com.github.wenslo.kotlin.app.annotation.OperationLog
 import com.github.wenslo.kotlin.app.entity.sys.SystemLog
+import com.github.wenslo.kotlin.app.entity.sys.enum.LogType
+import com.github.wenslo.kotlin.app.extension.append
 import com.github.wenslo.kotlin.app.repository.sys.SystemLogRepository
-import com.google.gson.GsonBuilder
+import com.github.wenslo.kotlin.app.security.ShiroUtils
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.annotation.Before
@@ -10,8 +13,7 @@ import org.aspectj.lang.annotation.Pointcut
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import org.springframework.web.context.request.RequestContextHolder
-import org.springframework.web.context.request.ServletRequestAttributes
+import java.util.*
 
 
 /**
@@ -24,7 +26,6 @@ class SystemLogAspect {
     private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
     lateinit var repository: SystemLogRepository
-    val gson = GsonBuilder().create()
 
     //Controller层切点
     @Pointcut("@annotation(com.github.wenslo.kotlin.app.annotation.OperationLog)")
@@ -35,13 +36,17 @@ class SystemLogAspect {
 
     @Before("controllerAspect()")
     fun doBefore(joinPoint: JoinPoint) {
-        val ra = RequestContextHolder.getRequestAttributes()
-        val sra = ra as ServletRequestAttributes
-        var request = sra.request
-        val target = joinPoint.target
         logger.debug("joinPoint.signature：{}", joinPoint.signature)
-        var log = SystemLog(operationParameter = joinPoint.args.joinToString { "；" },
-                methodName = joinPoint.signature.toString())
+        logger.debug("joinPoint.args：{}", Arrays.toString(joinPoint.args))
+        val user = ShiroUtils.getUser()
+        logger.debug("user：{},{}", user.id, user.username)
+        val operationLog = joinPoint.signature.javaClass.getAnnotation(OperationLog::class.java)
+        val log = SystemLog(operationParameter = Arrays.toString(joinPoint.args),
+                methodName = joinPoint.signature.toString(),
+                operationUser = user.id.append("：").append(user.username),
+                type = LogType.OPERATION,
+                methodDescription = operationLog.description)
+        repository.save(log)
 
     }
 }

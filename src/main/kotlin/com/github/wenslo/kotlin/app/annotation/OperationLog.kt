@@ -8,4 +8,4 @@ package com.github.wenslo.kotlin.app.annotation
 @Target(AnnotationTarget.FUNCTION)
 @Retention // default true
 @MustBeDocumented
-annotation class OperationLog
+annotation class OperationLog(val description: String = "no message")
