@@ -11,9 +11,9 @@ import javax.persistence.*
 @Table(name = "user")
 data class User(
         @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY) override val id: Long = 0,
-        @CreatedDate override val createdAt: Date = Date(),
-        @LastModifiedDate override val updatedAt: Date = Date(),
+        @GeneratedValue(strategy = GenerationType.IDENTITY) override var id: Long = 0,
+        @CreatedDate override var createdAt: Date = Date(),
+        @LastModifiedDate override var updatedAt: Date = Date(),
         @Column(name = "username")
         var username: String = "",
         //手机

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:include="/common/head :: head"></head>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h3>User View</h3>
+</div>
+<div class="modal-body">
+    <form id="user_form" role="form" th:action="${update} ? @{/user/update} : @{/user/save}"
+          method="post">
+        <input type="hidden" name="id" id="user_id" th:if="${user}" th:value="${user.id}"/>
+        <div class="form-group">
+            <label for="user_username">Username</label>
+            <input class="form-control" id="user_username" name="username" th:value="${user}?${user.username}:''"
+                   th:readonly="${update} == null  and ${view} != null"
+                   placeholder="Enter username">
+        </div>
+        <div class="form-group">
+            <label for="user_password">Password</label>
+            <input type="password" class="form-control" name="password" id="user_password"
+                   th:value="${user}?${user.password}:''"
+                   th:readonly="${update} == null and ${view} != null"
+                   placeholder="Password">
+        </div>
+        <div class="form-group">
+            <label for="user_phone">Phone</label>
+            <input type="phone" class="form-control" name="phone" id="user_phone" th:value="${user}?${user.phone}:''"
+                   th:readonly="${update} == null and ${view} != null"
+                   placeholder="Phone">
+        </div>
+        <div class="form-group">
+            <label for="user_select_disable_status">DisableStatus</label>
+            <select id="user_select_disable_status" name="status" class="form-control"
+                    data-live-search="true" data-rel="chosen" th:disabled="${update} == null  and ${view} != null">
+                <option value="DISABLE" th:selected="${user}?${user.status == 'DISABLE'}">DISABLE</option>
+                <option value="ENABLE" th:selected="${user}?${user.status == 'ENABLE'}">ENABLE</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="roles">Roles</label>
+            <select id="roles" multiple class="form-control" data-rel="chosen" name="roleList"
+                    th:disabled="${update} == null  and ${view} != null">
+
+                <option th:each="role : ${roles}"
+                        th:text="${role.title}"
+                        th:value="${role.id}"
+                        th:selected="${user}?${user.roleList.contains(role)}:null"
+                >
+                </option>
+            </select>
+        </div>
+    </form>
+</div>
+<div th:class=" ${view} ? 'modal-footer hide' :  'modal-footer'">
+    <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+    <a href="#" class="btn btn-primary" data-dismiss="modal"
+       onclick="$('#user_form').submit()">Save changes</a>
+</div>
+<div th:replace="/common/script :: script"></div>
+</html>

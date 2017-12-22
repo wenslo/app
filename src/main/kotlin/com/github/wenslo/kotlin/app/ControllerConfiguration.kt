@@ -12,6 +12,7 @@ import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter
 import org.springframework.web.client.AsyncRestTemplate
 import org.springframework.web.filter.CharacterEncodingFilter
 import org.springframework.web.filter.DelegatingFilterProxy
+import org.springframework.web.multipart.commons.CommonsMultipartResolver
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer
 import org.springframework.web.servlet.config.annotation.EnableWebMvc
@@ -95,4 +96,7 @@ class ControllerConfiguration : WebMvcConfigurerAdapter() {
         bean.order = 3
         return bean
     }
+
+    @Bean
+    fun commonsMultipartResolver() = CommonsMultipartResolver()
 }

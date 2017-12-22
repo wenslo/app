@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:include="/common/head :: head"></head>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h3>Add User</h3>
+</div>
+<div class="modal-body">
+    <form id="role_form" role="form" th:action="${update} ? @{/role/update} : @{/role/save}" method="post">
+        <input type="hidden" name="id" id="role_id" th:if="${role}" th:value="${role.id}"/>
+        <div class="form-group">
+            <label for="role_name">Name</label>
+            <input class="form-control" id="role_name" placeholder="Enter name" name="name"
+                   th:value="${role}?${role.name}:''"
+                   th:readonly="${update} == null  and ${view} != null"
+            >
+        </div>
+        <div class="form-group">
+            <label for="role_title">Title</label>
+            <input class="form-control" id="role_title" placeholder="Title" name="title"
+                   th:value="${role}?${role.title}:''"
+                   th:readonly="${update} == null and ${view} != null"
+            >
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="permissions">Permission</label>
+            <select id="permissions" multiple class="form-control" data-rel="chosen" name="permissionList"
+                    th:disabled="${update} == null  and ${view} != null">
+                <option th:each="permission : ${permissions}"
+                        th:text="${permission.name}"
+
+                >
+                    <!--th:selected="${role}?${role.permissionList.contains(permission)}:null"-->
+                </option>
+            </select>
+        </div>
+    </form>
+</div>
+<div th:class=" ${view} ? 'modal-footer hide' :  'modal-footer'">
+    <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+    <a href="#" class="btn btn-primary" data-dismiss="modal"
+       onclick="$('#role_form').submit()">Save
+        changes</a>
+</div>
+<div th:replace="/common/script :: script"></div>
+</html>

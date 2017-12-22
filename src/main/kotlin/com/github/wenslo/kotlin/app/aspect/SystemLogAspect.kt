@@ -12,11 +12,13 @@ import org.aspectj.lang.annotation.Before
 import org.aspectj.lang.annotation.Pointcut
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.util.*
 
 
 /**
+ * 日志记录
  * @author: 温海林
  * 2017年12月08日17:00:38
  */
@@ -25,7 +27,7 @@ import java.util.*
 class SystemLogAspect {
     private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
-    lateinit var repository: SystemLogRepository
+    @Autowired lateinit var repository: SystemLogRepository
 
     //Controller层切点
     @Pointcut("@annotation(com.github.wenslo.kotlin.app.annotation.OperationLog)")
@@ -34,19 +36,16 @@ class SystemLogAspect {
     }
 
 
-    @Before("controllerAspect()")
-    fun doBefore(joinPoint: JoinPoint) {
-        logger.debug("joinPoint.signature：{}", joinPoint.signature)
-        logger.debug("joinPoint.args：{}", Arrays.toString(joinPoint.args))
+    @Before("controllerAspect() && @annotation(operationLog)")
+    fun doBefore(joinPoint: JoinPoint, operationLog: OperationLog) {
         val user = ShiroUtils.getUser()
-        logger.debug("user：{},{}", user.id, user.username)
-        val operationLog = joinPoint.signature.javaClass.getAnnotation(OperationLog::class.java)
+        logger.debug("description：{}", operationLog.description)
         val log = SystemLog(operationParameter = Arrays.toString(joinPoint.args),
                 methodName = joinPoint.signature.toString(),
-                operationUser = user.id.append("：").append(user.username),
+                operationUser = "id".append(":").append(user.id).append(",").append("name").append(":").append(user
+                        .username),
                 type = LogType.OPERATION,
                 methodDescription = operationLog.description)
         repository.save(log)
-
     }
 }

@@ -2,10 +2,10 @@ package com.github.wenslo.kotlin.app.entity.sys
 
 import com.github.wenslo.kotlin.app.domain.StringListConverter
 import com.github.wenslo.kotlin.app.entity.BaseEntity
-import javax.persistence.Column
-import javax.persistence.Convert
-import javax.persistence.Entity
-import javax.persistence.Table
+import org.springframework.data.annotation.CreatedDate
+import org.springframework.data.annotation.LastModifiedDate
+import java.util.*
+import javax.persistence.*
 
 /**
  * @author: 温海林
@@ -14,6 +14,10 @@ import javax.persistence.Table
 @Entity
 @Table(name = "role")
 data class Role(
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY) override var id: Long = 0,
+        @CreatedDate override var createdAt: Date = Date(),
+        @LastModifiedDate override var updatedAt: Date = Date(),
         val name: String = "",
         val title: String = "",
         @Convert(converter = StringListConverter::class)

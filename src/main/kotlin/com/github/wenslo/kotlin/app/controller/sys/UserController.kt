@@ -3,9 +3,12 @@ package com.github.wenslo.kotlin.app.controller.sys
 import com.github.wenslo.kotlin.app.annotation.OperationLog
 import com.github.wenslo.kotlin.app.condition.sys.UserCondition
 import com.github.wenslo.kotlin.app.entity.sys.User
+import com.github.wenslo.kotlin.app.permisson.SysPermission
+import com.github.wenslo.kotlin.app.repository.sys.RoleRepository
 import com.github.wenslo.kotlin.app.repository.sys.UserRepository
 import com.github.wenslo.kotlin.app.repository.sys.UserSpecification
 import com.github.wenslo.kotlin.app.service.sys.UserService
+import org.apache.shiro.authz.annotation.RequiresPermissions
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,16 +25,19 @@ class UserController {
     lateinit var repository: UserRepository
     @Autowired
     lateinit var service: UserService
+    @Autowired
+    lateinit var roleRepository: RoleRepository
 
     @ModelAttribute
     fun modelAttribute(map: ModelMap): ModelMap {
         map.put("title", "user manage")
-        map.put("update", "user manage")
+        map.put("roles", roleRepository.findAll())
+        map.put("view", null)
         return map
     }
 
-    @OperationLog()
     @RequestMapping("list", method = arrayOf(RequestMethod.POST, RequestMethod.GET))
+    @RequiresPermissions(SysPermission.UserPermission.view)
     fun list(condition: UserCondition, pageable: Pageable, map: ModelMap): String {
         logger.debug("method:list,condition:{},pageable:{}", condition, pageable)
         val page = repository.findAll(UserSpecification(condition), pageable)
@@ -41,25 +47,35 @@ class UserController {
         return "user"
     }
 
-
+    @OperationLog
     @RequestMapping("save", method = arrayOf(RequestMethod.POST))
-    fun save(user: User) {
+    @RequiresPermissions(SysPermission.UserPermission.edit)
+    fun save(user: User): String {
         logger.debug("method:save,parameter:{}", user)
-        repository.save(user).let { "redirect:/user/list"; }
+        repository.save(user)
+        return "redirect:/user/list"
     }
 
+    @OperationLog
     @RequestMapping("delete/{id}", method = arrayOf(RequestMethod.POST, RequestMethod.GET))
-    fun delete(@PathVariable id: Long) {
-        logger.debug("method:delete,id:{}", id)
-        repository.delete(id).let { "redirect:/user/list"; }
+    @RequiresPermissions(SysPermission.UserPermission.remove)
+    fun delete(@PathVariable id: Long): String {
+        logger.debug("method:delete,id:{}", id).let { repository.delete(id).let { return "redirect:/user/list"; } }
     }
 
     @GetMapping("detail/{id}")
-    @ResponseBody
-    fun detail(@PathVariable id: Long): User =
-            logger.debug("method:detail,id:{}", id).let { repository.getOne(id) }
+    @RequiresPermissions(SysPermission.UserPermission.view)
+    fun detail(@PathVariable id: Long, flag: String?, map: ModelMap): String {
+        logger.debug("method:detail,id:{},flag:{}", id, flag)
+        map.put("update", flag)
+        if (flag == null) map.put("view", "1") else map.put("view", null)
+        map.put("user", repository.getOne(id))
+        return "user_detail"
+    }
 
+    @OperationLog
     @RequestMapping("update", method = arrayOf(RequestMethod.POST, RequestMethod.GET))
+    @RequiresPermissions(SysPermission.UserPermission.edit)
     fun update(@RequestParam("id") id: Long, user: User, map: ModelMap): String {
         logger.debug("method:update,parameter :{}", user.toString())
         val oldUser = repository.getOne(id)
@@ -68,4 +84,7 @@ class UserController {
         map.put("message", "Update Success")
         return "redirect:/user/list"
     }
+
+    @RequestMapping("addView")
+    fun showAddView() = "user_detail"
 }
