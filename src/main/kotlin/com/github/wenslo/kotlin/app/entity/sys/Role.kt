@@ -22,5 +22,5 @@ data class Role(
         val title: String = "",
         @Convert(converter = StringListConverter::class)
         @Column(name = "permission", length = 2500)
-        var permissionList: List<String> = emptyList()
+        var permissionList: List<String?> = emptyList()
 ) : BaseEntity()

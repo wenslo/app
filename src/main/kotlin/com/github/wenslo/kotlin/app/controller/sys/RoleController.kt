@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Controller
 import org.springframework.ui.ModelMap
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 /**
  * 角色控制器
@@ -51,8 +52,8 @@ class RoleController {
     @OperationLog
     @RequestMapping("save")
     @RequiresPermissions(SysPermission.RolePermission.edit)
-    fun save(name: String, title: String, permissionList: String): String {
-        val role = Role(name = name, title = title, permissionList = listOf(permissionList))
+    fun save(name: String, title: String, permissionList: String?): String {
+        val role = Role(name = name, title = title, permissionList = if (Objects.nonNull(permissionList)) listOf(permissionList) else emptyList<String>())
         logger.debug("method:save, parameter :$role")
         repository.save(role)
         return "redirect:/role/list"
@@ -82,10 +83,10 @@ class RoleController {
     @OperationLog
     @RequestMapping("update", method = arrayOf(RequestMethod.POST, RequestMethod.GET))
     @RequiresPermissions(SysPermission.RolePermission.edit)
-    fun update(@RequestParam("id") id: Long, name: String, title: String, permissionList: String, map: ModelMap): String {
+    fun update(@RequestParam("id") id: Long, name: String, title: String, permissionList: String?, map: ModelMap): String {
         logger.debug("method:update,id:$id,name:$name,title:$title")
         val oldRole = repository.getOne(id)
-        val copy = oldRole.copy(name = name, title = title, permissionList = listOf(permissionList))
+        val copy = oldRole.copy(name = name, title = title, permissionList = if (Objects.nonNull(permissionList)) listOf(permissionList) else emptyList<String>())
         repository.save(copy)
         logger.debug("to change role is {}", copy)
         map.put("message", "Update Success")
