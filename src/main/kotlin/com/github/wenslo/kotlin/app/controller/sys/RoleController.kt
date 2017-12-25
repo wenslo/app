@@ -28,8 +28,7 @@ class RoleController {
     @Autowired
     lateinit var repository: RoleRepository
     @Autowired
-    lateinit var collect: PermissionCollector
-
+    lateinit var collector: PermissionCollector;
 
     @ModelAttribute
     fun modelAttribute(map: ModelMap): ModelMap {
@@ -52,9 +51,9 @@ class RoleController {
     @OperationLog
     @RequestMapping("save")
     @RequiresPermissions(SysPermission.RolePermission.edit)
-    fun save(name: String, title: String): String {
-        val role = Role(name = name, title = title)
-        logger.debug("method:save, :{}", role)
+    fun save(name: String, title: String, permissionList: String): String {
+        val role = Role(name = name, title = title, permissionList = listOf(permissionList))
+        logger.debug("method:save, parameter :$role")
         repository.save(role)
         return "redirect:/role/list"
     }
@@ -75,7 +74,7 @@ class RoleController {
         map.put("update", flag)
         if (flag == null) map.put("view", "1") else map.put("view", null)
         map.put("role", repository.getOne(id))
-        map.put("permissions", collect.getPermissionList())
+        map.put("permissions", collector.getPermissionList())
         return "role_detail"
     }
 
@@ -83,10 +82,10 @@ class RoleController {
     @OperationLog
     @RequestMapping("update", method = arrayOf(RequestMethod.POST, RequestMethod.GET))
     @RequiresPermissions(SysPermission.RolePermission.edit)
-    fun update(@RequestParam("id") id: Long, name: String, title: String, map: ModelMap): String {
+    fun update(@RequestParam("id") id: Long, name: String, title: String, permissionList: String, map: ModelMap): String {
         logger.debug("method:update,id:$id,name:$name,title:$title")
         val oldRole = repository.getOne(id)
-        val copy = oldRole.copy(name = name, title = title)
+        val copy = oldRole.copy(name = name, title = title, permissionList = listOf(permissionList))
         repository.save(copy)
         logger.debug("to change role is {}", copy)
         map.put("message", "Update Success")
@@ -100,8 +99,7 @@ class RoleController {
 
     @RequestMapping("addView")
     fun showAddView(map: ModelMap): String {
-        map.put("permissions", collect.getPermissionList())
-        logger.debug("the permissions is ${collect.getPermissionList()}")
+        map.put("permissions", collector.getPermissionList())
         return "role_detail"
     }
 

@@ -29,9 +29,10 @@
                     th:disabled="${update} == null  and ${view} != null">
                 <option th:each="permission : ${permissions}"
                         th:text="${permission.name}"
-
+                        th:value="${permission.value}"
+                        th:selected="${role} and ${not #lists.isEmpty(role.permissionList)} ?${role.permissionList.contains(permission.value)}:null"
                 >
-                    <!--th:selected="${role}?${role.permissionList.contains(permission)}:null"-->
+
                 </option>
             </select>
         </div>

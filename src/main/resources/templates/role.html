@@ -123,8 +123,9 @@
                                         <td class="center" th:text="${role.name}"></td>
                                         <td class="center" th:text="${role.title}"></td>
                                         <td class="center" th:if="${#lists.isEmpty(role.permissionList)}">none</td>
-                                        <td class="center" th:if="${not #lists.isEmpty(role.permissionList)}"
-                                            th:each="permission : ${role.permissionList}" th:text="${permission}"></td>
+                                        <td class="center" th:if="${not #lists.isEmpty(role.permissionList)}">
+                                            <span th:each="permission : ${role.permissionList}" th:text="${permission}"/>
+                                        </td>
 
                                         <td class="center">
                                             <a class="btn btn-success btn-xs" href="#"

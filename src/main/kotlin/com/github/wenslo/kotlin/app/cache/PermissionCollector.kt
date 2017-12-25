@@ -22,7 +22,7 @@ class PermissionCollector : BeanPostProcessor {
     override fun postProcessBeforeInitialization(bean: Any, beanName: String?): Any = bean
 
     override fun postProcessAfterInitialization(bean: Any, beanName: String?): Any {
-        logger.debug("beginning process bean , for permission , bean name is $beanName")
+//        logger.debug("beginning process bean , for permission , bean name is $beanName")
         if (beanName!!.indexOf("Permission") <= 1) {
             return bean
         }
