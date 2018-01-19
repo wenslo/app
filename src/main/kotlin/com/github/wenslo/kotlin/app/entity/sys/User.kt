@@ -26,7 +26,7 @@ data class User(
         //头像
         @Column(name = "head_portrait")
         var headPortrait: String = "",
-        @ManyToMany
+        @ManyToMany(fetch = FetchType.EAGER)
         @JoinTable(name = "user_role", joinColumns = arrayOf(JoinColumn(name = "user_id")), inverseJoinColumns
         = arrayOf(JoinColumn(name = "role_id")))
         var roleList: List<Role> = emptyList()

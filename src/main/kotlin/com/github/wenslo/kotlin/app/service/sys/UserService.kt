@@ -2,6 +2,7 @@ package com.github.wenslo.kotlin.app.service.sys
 
 import com.github.wenslo.kotlin.app.entity.sys.User
 
+
 interface UserService {
 
     /**

@@ -79,7 +79,7 @@ class UserController {
     fun update(@RequestParam("id") id: Long, user: User, map: ModelMap): String {
         logger.debug("method:update,parameter :{}", user.toString())
         val oldUser = repository.getOne(id)
-        val copy = oldUser.copy(username = user.username, phone = user.phone, password = user.password, status = user.status).let { repository.save(it) }
+        val copy = oldUser.copy(username = user.username, phone = user.phone, password = user.password, status = user.status, roleList = user.roleList).let { repository.save(it) }
         logger.debug("to change user is {}", copy)
         map.put("message", "Update Success")
         return "redirect:/user/list"
