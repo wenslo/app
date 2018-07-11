@@ -38,14 +38,14 @@ class SecurityConfiguration {
 
     fun filterChainDefinitionMap(): Map<String, String> {
         var map = mutableMapOf<String, String>()
-//        map.put("/bower_components/**", "anon")
-//        map.put("/css/**", "anon")
-//        map.put("/fonts/**", "anon")
-//        map.put("/img/**", "anon")
-//        map.put("/js/**", "anon")
-        map.put("/", "anon")
-//        map.put("/user/**", "ahonc")
-//        map.put("/role/**", "")
+        map.put("/bower_components/**", "anon")
+        map.put("/css/**", "anon")
+        map.put("/fonts/**", "anon")
+        map.put("/img/**", "anon")
+        map.put("/js/**", "anon")
+//        map.put("/", "anon")
+        map.put("/user/**", "perms[user]")
+        map.put("/role/**", "perms[role]")
         return map
     }
 

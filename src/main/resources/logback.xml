@@ -7,6 +7,16 @@
         </layout>
     </appender>
 
+    　
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>/home/dev/log/app/app.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+
     <!-- 3rdparty Loggers -->
     <logger name="org.springframework" level="WARN"/>
 
@@ -17,6 +27,6 @@
     <logger name="org.thymeleaf" level="ERROR"/>
 
     <root level="debug">
-        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
     </root>
 </configuration>
